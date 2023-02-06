@@ -1,0 +1,15 @@
+.popup__title {
+  font-size: 1.5em;
+  font-weight: 900;
+  line-height: 1.21;
+  padding: 34px 0 54px 36px;
+  margin: 0;
+  color: black;
+}
+
+@media (max-width: 440px) {
+  .popup__title {
+    font-size: 18px;
+    padding: 25px 22px 75px 22px;
+  }
+}

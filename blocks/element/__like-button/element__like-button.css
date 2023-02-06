@@ -1,0 +1,14 @@
+ .element__like-button {
+  min-width: 22px;
+  min-height: 19px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: center / cover url(../../../images/like-button-disabled.svg);
+  border: none;
+  cursor: pointer;
+ }
+
+ .element__like-button:hover {
+  opacity: .5;
+ }

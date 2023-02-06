@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./pages/index.css">
+    <title>Mesto Russia</title>
+  </head>
+  <body class="root">
+    <header class="header">
+      <img class="header__logo" src="./images/header-logo.svg" alt="Логотип Mesto">
+    </header>
+    <main class="content">
+    <section class="profile">
+      <img class="profile__avatar" src="./images/profile-avatar.png" alt="Аватар профиля">
+      <div class="profile__info">
+        <h1 class="profile__author">Жак-Ив Кусто</h1>
+        <p class="profile__description">Исследователь океана</p>
+        <button class="profile__edit-button" type="button"></button>
+      </div>
+      <button class="profile__add-button" type="button"></button>
+    </section>
+    <section class="elements" aria-label="Фото-карточки">
+      <ul class="elements__list">
+        <li class="element">
+          <img class="element__image" src="./images/content/grid-canada.jpg" alt="Фото-карточка с изображением озера Морейн, Канада">
+          <div class="element__container"> 
+            <h2 class="element__heading">Канада, озеро Морейн</h2>
+            <button class="element__like-button element__like-button_active" type="button"></button>
+          </div>
+        </li>
+        <li class="element">
+          <img class="element__image" src="./images/content/grid-baikal.jpg" alt="Фото-карточка с изображением Байкальского пляжа">
+          <div class="element__container"> 
+            <h2 class="element__heading">Байкал, остров Ольхон</h2>
+            <button class="element__like-button element__like-button_active" type="button"></button>
+          </div>
+        </li>
+        <li class="element">
+          <img class="element__image" src="./images/content/grid-venezuela.jpg" alt="Фото-карточка с изображением горы Рорайма в Венесуэле">
+          <div class="element__container"> 
+            <h2 class="element__heading">Венесуэла, гора Рорайма</h2>
+            <button class="element__like-button element__like-button_active" type="button"></button>
+          </div>
+        </li>
+        <li class="element">
+          <img class="element__image" src="./images/content/grid-elbrus.png" alt="Фото-карточка с изображением Эльбруса из далека">
+          <div class="element__container"> 
+            <h2 class="element__heading">Гора Эльбрус</h2>
+            <button class="element__like-button element__like-button_active" type="button"></button>
+          </div>
+        </li>
+        <li class="element">
+          <img class="element__image" src="./images/content/grid-dombai.png" alt="Фото-карточка с изображением горной территории Домбай">
+          <div class="element__container"> 
+            <h2 class="element__heading">Домбай</h2>
+            <button class="element__like-button element__like-button_active" type="button"></button>
+          </div>
+        </li>
+        <li class="element">
+          <img class="element__image" src="./images/content/grid-karachevsk.png" alt="Фото-карточка с изображением Карачевска">
+          <div class="element__container"> 
+            <h2 class="element__heading">Карачаевск</h2>
+            <button class="element__like-button element__like-button_active" type="button"></button>
+          </div>
+        </li>
+      </ul>
+    </section>
+    <footer class="footer">
+      <p class="footer__copyright">&copy; 2023. Владимир Зайцев x Mesto&nbsp;Russia</p>
+    </footer>
+    <!-- Скрытая секция Popup -->
+    <section class="popup">
+      <div class="popup__container">
+        <button class="popup__close-button" type="button" aria-label="Закрыть"></button>
+        <h2 class="popup__title">Редактировать профиль</h2>
+        <form class="popup__form" name="form">
+          <input class="popup__input popup__input_name" name="user" type="text" placeholder="Имя" required>
+          <input class="popup__input popup__input_description" name="job" type="text" placeholder="Описание" required>
+        </form>
+        <button class="popup__save-button" type="submit">Сохранить</button>
+      </div>
+    </section>
+    <!-- Скрытая секция Popup -->
+    </main>
+  </body>
+</html>

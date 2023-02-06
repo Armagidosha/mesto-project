@@ -1,0 +1,13 @@
+.element__container {
+  background-color: white;
+  min-height: 30px;
+  margin: 0;
+  min-height: 79px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  padding: 0 20px 0 21px;
+}
