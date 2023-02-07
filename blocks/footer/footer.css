@@ -4,7 +4,7 @@
   padding-bottom: 60px;
 }
 
-@media (max-width: 670px) {
+@media (max-width: 920px) {
   .footer {
     margin: 48px auto 0;
     max-width: calc(100% - 38px);
