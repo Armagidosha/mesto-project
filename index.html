@@ -22,66 +22,57 @@
       </section>
       <section class="elements" aria-label="Фото-карточки">
         <ul class="elements__list">
-          <li class="element">
-            <img class="element__image" src="./images/content/grid-canada.jpg" alt="Фото-карточка с изображением озера Морейн, Канада">
-            <div class="element__container"> 
-              <h2 class="element__heading">Канада, озеро Морейн</h2>
-              <button class="element__like-button " type="button"></button>
-            </div>
-          </li>
-          <li class="element">
-            <img class="element__image" src="./images/content/grid-baikal.jpg" alt="Фото-карточка с изображением Байкальского пляжа">
-            <div class="element__container"> 
-              <h2 class="element__heading">Байкал, остров Ольхон</h2>
-              <button class="element__like-button" type="button"></button>
-            </div>
-          </li>
-          <li class="element">
-            <img class="element__image" src="./images/content/grid-venezuela.jpg" alt="Фото-карточка с изображением горы Рорайма в Венесуэле">
-            <div class="element__container"> 
-              <h2 class="element__heading">Венесуэла, гора Рорайма</h2>
-              <button class="element__like-button" type="button"></button>
-            </div>
-          </li>
-          <li class="element">
-            <img class="element__image" src="./images/content/grid-elbrus.png" alt="Фото-карточка с изображением Эльбруса из далека">
-            <div class="element__container"> 
-              <h2 class="element__heading">Гора Эльбрус</h2>
-              <button class="element__like-button" type="button"></button>
-            </div>
-          </li>
-          <li class="element">
-            <img class="element__image" src="./images/content/grid-dombai.png" alt="Фото-карточка с изображением горной территории Домбай">
-            <div class="element__container"> 
-              <h2 class="element__heading">Домбай</h2>
-              <button class="element__like-button" type="button"></button>
-            </div>
-          </li>
-          <li class="element">
-            <img class="element__image" src="./images/content/grid-karachevsk.png" alt="Фото-карточка с изображением Карачаевска">
-            <div class="element__container"> 
-              <h2 class="element__heading">Карачаевск</h2>
-              <button class="element__like-button" type="button"></button>
-            </div>
-          </li>
         </ul>
       </section>
     </main>
     <footer class="footer">
       <p class="footer__copyright">&copy; 2023. Владимир Зайцев x Mesto&nbsp;Russia</p>
     </footer>
-    <!-- Скрытая секция Popup -->
-    <section class="popup">
+
+    <!-- ---------------------------------------------- -->
+    <!-- Popup open image -->
+    <section class="popup popup_image_preview">
+        <figure class="popup__figure">
+          <img class="popup__image" src="" alt="">
+          <figcaption class="popup__figcaption"></figcaption>
+          <button class="popup__close-button" type="button" aria-label="Закрыть"></button>
+      </div>
+    </section>
+    <!-- Popup edit profile -->
+    <section class="popup popup_profile_edit">
       <div class="popup__container">
         <button class="popup__close-button" type="button" aria-label="Закрыть"></button>
         <h2 class="popup__title">Редактировать профиль</h2>
-        <form class="popup__form" name="form">
-          <input class="popup__input popup__input_type_name" name="user" type="text" placeholder="Имя" required>
-          <input class="popup__input popup__input_type_description" name="description" type="text" placeholder="Описание" required>
+        <form class="popup__form" name="form" id="EditForm">
+          <input class="popup__input popup__input_type_name" name="user" type="text" placeholder="Имя" autocomplete="off" maxlength="25" required>
+          <input class="popup__input popup__input_type_description" name="description" type="text" placeholder="Описание" autocomplete="off" maxlength="25" required>
         </form>
-        <button class="popup__save-button" type="submit">Сохранить</button>
+        <button class="popup__save-button" type="submit" form="EditForm">Сохранить</button>
       </div>
     </section>
-    <!-- Скрытая секция Popup -->
+    <!-- Popup add card -->
+    <section class="popup popup_card_add">
+      <div class="popup__container">
+        <button class="popup__close-button" type="button" aria-label="Закрыть"></button>
+        <h2 class="popup__title">Новое место</h2>
+        <form class="popup__form" name="form" id="AddForm" onsubmit="return false;">
+          <input class="popup__input popup__input_type_card-heading" name="user" type="text" placeholder="Название" autocomplete="off" maxlength="25" required>
+          <input class="popup__input popup__input_type_card-url" name="description" type="url" placeholder="Ссылка на картинку" autocomplete="off" required>
+        </form>
+        <button class="popup__save-button" type="submit" form="AddForm">Сохранить</button>
+      </div>
+    </section>
+    <!-- Template -->
+    <template id="card-Template">
+      <li class="element">
+        <img class="element__image" src="" alt="">
+        <div class="element__container"> 
+          <h2 class="element__heading"></h2>
+          <button class="element__delete-button" type="button"></button>
+          <button class="element__like-button" type="button"></button>
+        </div>
+      </li>
+    </template>
+    <script src="./pages/index.js"></script>
   </body>
 </html>
