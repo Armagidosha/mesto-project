@@ -69,7 +69,6 @@ function createCard(name, link) {
   cardElement.querySelector('.element__delete-button').addEventListener('click', evt => {
     evt.target.closest('.element').remove();
   });
-  cardsContainer.prepend(cardElement);
   heading.textContent = name;
   image.src = link;
   image.alt = name;
