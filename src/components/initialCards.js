@@ -1,4 +1,4 @@
-const initialCards = [
+export const initialCards = [
   {
     name: 'Канада, озеро Морейн',
     link: 'https://co19.nevseoboi.com.ua/mountains/331/33123/1562510903-1005339-mountains-nevseoboi.com.ua.jpg'

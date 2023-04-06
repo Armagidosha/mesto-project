@@ -3,16 +3,15 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./pages/index.css">
     <title>Mesto Russia</title>
   </head>
   <body class="root">
     <header class="header">
-      <img class="header__logo" src="./images/header-logo.svg" alt="Логотип Mesto">
+      <img class="header__logo" src='<%=require("./images/header-logo.svg")%>' alt="Логотип Mesto">
     </header>
     <main class="content">
       <section class="profile">
-        <img class="profile__avatar" src="./images/profile-avatar.png" alt="Аватар профиля">
+        <img class="profile__avatar" src='<%=require("./images/profile-avatar.png")%>' alt="Аватар профиля">
         <div class="profile__info">
           <h1 class="profile__author">Жак-Ив Кусто</h1>
           <p class="profile__description">Исследователь океана</p>
@@ -44,11 +43,13 @@
       <div class="popup__container">
         <button class="popup__close-button" type="button" aria-label="Закрыть"></button>
         <h2 class="popup__title">Редактировать профиль</h2>
-        <form class="popup__form" name="form" id="EditForm">
-          <input class="popup__input popup__input_type_name" name="user" type="text" placeholder="Имя" autocomplete="off" maxlength="25" required>
-          <input class="popup__input popup__input_type_description" name="description" type="text" placeholder="Описание" autocomplete="off" maxlength="25" required>
-        </form>
-        <button class="popup__save-button" type="submit" form="EditForm">Сохранить</button>
+        <form class="popup__form" name="form" id="EditForm" novalidate>
+            <input class="popup__input popup__input_type_name" id="name-input" name="user" type="text" placeholder="Имя" autocomplete="off" minlength="2" maxlength="40" pattern="^[А-ЯЁа-яёA-Za-z\s\-]+$" data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы" required>
+            <span class="popup__input-error" id="name-input-error"></span>
+            <input class="popup__input popup__input_type_description" id="descr-input" name="description" type="text" placeholder="Описание" autocomplete="off" minlength="2" pattern="^[А-ЯЁа-яёA-Za-z\s\-]+$" maxlength="200" data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы" required>
+            <span class="popup__input-error" id="descr-input-error"></span>
+            <button class="popup__save-button" type="submit">Сохранить</button>
+          </form>
       </div>
     </section>
     <!-- Popup add card -->
@@ -56,11 +57,13 @@
       <div class="popup__container">
         <button class="popup__close-button" type="button" aria-label="Закрыть"></button>
         <h2 class="popup__title">Новое место</h2>
-        <form class="popup__form" name="form" id="AddForm" onsubmit="return false;">
-          <input class="popup__input popup__input_type_card-heading" name="user" type="text" placeholder="Название" autocomplete="off" maxlength="25" required>
-          <input class="popup__input popup__input_type_card-url" name="description" type="url" placeholder="Ссылка на картинку" autocomplete="off" required>
+        <form class="popup__form" name="form" id="AddForm" novalidate>
+          <input class="popup__input popup__input_type_card-heading" id="card-name-input" name="user" type="text" placeholder="Название" autocomplete="off" minlength="2" pattern="^[А-ЯЁа-яёA-Za-z\s\-]+$" data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы" maxlength="30" required>
+          <span class="popup__input-error" id="card-name-input-error"></span>
+          <input class="popup__input popup__input_type_card-url" id="card-url-input" name="description" type="url" placeholder="Ссылка на картинку" autocomplete="off" required>
+          <span class="popup__input-error" id="card-url-input-error"></span>
+          <button class="popup__save-button" type="submit">Сохранить</button>
         </form>
-        <button class="popup__save-button" type="submit" form="AddForm">Сохранить</button>
       </div>
     </section>
     <!-- Template -->
@@ -74,7 +77,5 @@
         </div>
       </li>
     </template>
-    <script src="./pages/cards.js"></script>
-    <script src="./pages/index.js"></script>
   </body>
 </html>
