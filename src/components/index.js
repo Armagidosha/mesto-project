@@ -23,7 +23,7 @@ import {closePopup, openPopup} from './modal';
 import {addCard, createCard} from './card';
 import {formConst} from './utils.js';
 import {enableValidation, resetValidation} from './validate';
-import {getUserInfo, getCards, postCards, patchUserInfo, updateAvatar} from './api';
+import {getUserInfo, getCards, postCards, patchUserInfo, updateAvatar, updateLikes} from './api';
 
 function сloseButtonsListener () {
   document.querySelectorAll('.popup__close-button').forEach(button => {
@@ -41,6 +41,30 @@ const renderLoading = (isLoading, form) => {
   }
 }
 
+const disableButton = (button) => {
+  button.disabled = true
+  button.classList.add('popup__save-button_disabled')
+}
+
+export const showLikeCount = (likes, cardElement, userId) => {
+  const likeButton = cardElement.querySelector('.element__like-button');
+  const likeCounter = cardElement.querySelector('.element__like-count');
+
+  likeCounter.textContent = `${likes.length}`;
+  const isLike = likes.some((item) => item._id === userId);
+  likeButton.classList.toggle('element__like-button_active', isLike);
+}
+
+export const updLikes = (id, userId, cardElement) => {
+  const likeButton = cardElement.querySelector('.element__like-button');
+  const like = likeButton.classList.contains('element__like-button_active');
+  updateLikes(!like, id)
+  .then((card) => {
+    showLikeCount(card.likes, cardElement, userId);
+  })
+  .catch((error) => console.error(error))
+}
+
 // Открытие попапа редактирования профиля
 profileEditButton.addEventListener('click', () => {
   openPopup(popupEdit);
@@ -54,8 +78,7 @@ cardAddButton.addEventListener('click', () => {
   openPopup(popupAdd)
   resetValidation(popupAdd, formConst);
   submitAddForm.reset();
-  addSubmitButton.disabled = true;
-  addSubmitButton.classList.add('popup__save-button_disabled');
+  disableButton(addSubmitButton);
 });
 
 // Открытие попапа обновления аватара 
@@ -63,9 +86,8 @@ avatar.addEventListener('click', () => {
   openPopup(popupAvatar)
   resetValidation(popupAvatar, formConst);
   avatarForm.reset();
-  avatarButton.disabled = true;
-  avatarButton.classList.add('popup__save-button_disabled');
-})
+  disableButton(avatarButton);
+});
 
 // Функция сабмита аватара
 function submitAvatar (evt) {
@@ -104,7 +126,7 @@ const submitCards = (evt) => {
     url: imageInput.value
   })
   .then((card) => {
-    cardsContainer.append(createCard(card))
+    cardsContainer.prepend(createCard(card))
     closePopup(popupAdd);
   })
   .catch((error) => console.error(`Не удалось отправить карточку: ${error}`))
@@ -112,25 +134,11 @@ const submitCards = (evt) => {
 }
 submitAddForm.addEventListener('submit', submitCards)
 // 
-// addArrayCards();
 enableValidation(formConst);
 сloseButtonsListener();
-
-// 
-// 
 // 
 // A P I
-// 
-// 
-// 
-
-export const config = {
-  baseUrl: 'https://nomoreparties.co/v1/plus-cohort-22',
-  headers: {
-    authorization: '51223542-913b-4f70-95e2-80679cf69654',
-    'Content-Type': 'application/json'
-  }
-}
+//
 
 export const getId = () => {
   return id;
