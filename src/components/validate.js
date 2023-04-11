@@ -1,3 +1,8 @@
+export const disableButton = (button) => {
+  button.disabled = true
+  button.classList.add('popup__save-button_disabled')
+}
+
 const showError = (formElement, inputElement, errorMessage, formConst) => {
   const errorElement = formElement.querySelector(`#${inputElement.id}-error`)
   inputElement.classList.add(formConst.inputTypeError);
