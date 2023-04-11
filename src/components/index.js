@@ -20,9 +20,9 @@ import {
   avatarForm
 } from './constants';
 import {closePopup, openPopup} from './modal';
-import {addCard, createCard} from './card';
+import {addCard, createCard, showLikeCount} from './card';
 import {formConst} from './utils.js';
-import {enableValidation, resetValidation} from './validate';
+import {enableValidation, resetValidation, disableButton} from './validate';
 import {getUserInfo, getCards, postCards, patchUserInfo, updateAvatar, updateLikes} from './api';
 
 function сloseButtonsListener () {
@@ -39,20 +39,6 @@ const renderLoading = (isLoading, form) => {
   } else {
     button.textContent = 'Сохранить';
   }
-}
-
-const disableButton = (button) => {
-  button.disabled = true
-  button.classList.add('popup__save-button_disabled')
-}
-
-export const showLikeCount = (likes, cardElement, userId) => {
-  const likeButton = cardElement.querySelector('.element__like-button');
-  const likeCounter = cardElement.querySelector('.element__like-count');
-
-  likeCounter.textContent = `${likes.length}`;
-  const isLike = likes.some((item) => item._id === userId);
-  likeButton.classList.toggle('element__like-button_active', isLike);
 }
 
 export const updLikes = (id, userId, cardElement) => {

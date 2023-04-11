@@ -1,6 +1,6 @@
 import {cardsContainer, cardTemplate, imagePreview, imageFigCaption, popupImagePreview} from './constants';
 import {openPopup} from './modal';
-import {getId, updLikes, showLikeCount} from './index.js';
+import {getId, updLikes} from './index.js';
 import {deleteCard} from './api';
 
 // Открытие попапа с картинкой
@@ -9,6 +9,15 @@ function openImagePreview(imageUrl, figCap) {
   imagePreview.src = imageUrl;
   imagePreview.alt = figCap;
   imageFigCaption.textContent = figCap;
+}
+
+export const showLikeCount = (likes, cardElement, userId) => {
+  const likeButton = cardElement.querySelector('.element__like-button');
+  const likeCounter = cardElement.querySelector('.element__like-count');
+
+  likeCounter.textContent = `${likes.length}`;
+  const isLike = likes.some((item) => item._id === userId);
+  likeButton.classList.toggle('element__like-button_active', isLike);
 }
 
 // Функция создания карточек
