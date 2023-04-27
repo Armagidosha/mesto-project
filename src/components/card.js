@@ -77,10 +77,3 @@ export class Card {
   }
 
 }
-
-// Функция добавления карточек
-export const addCard = (cards) => {
-  cards.forEach((element) => {
-    cardsContainer.append(createCard(element))
-  })
-};
