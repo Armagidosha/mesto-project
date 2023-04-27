@@ -1,7 +1,7 @@
 import {cardsContainer, cardTemplate, imagePreview, imageFigCaption, popupImagePreview} from './constants';
 import {openPopup} from './modal';
 import {getId, updLikes} from './index.js';
-import {deleteCard} from './api';
+import {api} from './api';
 
 // Открытие попапа с картинкой
 function openImagePreview(imageUrl, figCap) {
@@ -31,7 +31,7 @@ export function createCard({name, link, likes, _id, owner}) {
     updLikes(_id, userId, cardElement);
   });
   cardElement.querySelector('.element__delete-button').addEventListener('click', () => {
-    deleteCard(_id)
+    api.deleteCard(_id)
     .then (() => {
       cardElement.remove()
     })

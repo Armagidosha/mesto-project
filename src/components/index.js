@@ -23,7 +23,7 @@ import {closePopup, openPopup} from './modal';
 import {addCard, createCard, showLikeCount} from './card';
 import {formConst} from './utils.js';
 import {enableValidation, resetValidation, disableButton} from './validate';
-import {getUserInfo, getCards, postCards, patchUserInfo, updateAvatar, updateLikes} from './api';
+import {api} from './api';
 
 function сloseButtonsListener () {
   document.querySelectorAll('.popup__close-button').forEach(button => {
@@ -44,7 +44,7 @@ const renderLoading = (isLoading, form) => {
 export const updLikes = (id, userId, cardElement) => {
   const likeButton = cardElement.querySelector('.element__like-button');
   const like = likeButton.classList.contains('element__like-button_active');
-  updateLikes(!like, id)
+  api.updateLikes(!like, id)
   .then((card) => {
     showLikeCount(card.likes, cardElement, userId);
   })
@@ -79,7 +79,7 @@ avatar.addEventListener('click', () => {
 function submitAvatar (evt) {
   evt.preventDefault();
   renderLoading(true, popupAvatar);
-  updateAvatar(inputAvatarUrl.value)
+  api.updateAvatar(inputAvatarUrl.value)
   .then((res) => {
     updUserInfo(res);
     closePopup(popupAvatar);
@@ -93,7 +93,7 @@ avatarForm.addEventListener('submit', submitAvatar)
 function submitProfile (evt) {
   evt.preventDefault();
   renderLoading(true, popupEdit)
-  patchUserInfo({name: inputName.value, about: inputDescription.value})
+  api.patchUserInfo({name: inputName.value, about: inputDescription.value})
   .then((res) => {
     updUserInfo(res);
     closePopup(popupEdit);
@@ -107,7 +107,7 @@ submitEditForm.addEventListener('submit', submitProfile);
 const submitCards = (evt) => {
   evt.preventDefault();
   renderLoading(true, popupAdd);
-  postCards({
+  api.postCards({
     name: headingInput.value,
     url: imageInput.value
   })
@@ -140,7 +140,7 @@ const updUserInfo = ({name, about, avatar, _id}) => {
   id = _id
 }
 
-Promise.all([getUserInfo(), getCards()])
+Promise.all([api.getUserInfo(), api.getCards()])
 .then(([userInfo, cards]) => {
   updUserInfo(userInfo);
   addCard(cards)
