@@ -24,6 +24,7 @@ import {addCard, Card} from './card';
 import {formConst} from './utils.js';
 import FormValidator from './validate';
 import {api} from './api';
+import Section from './section';
 
 function сloseButtonsListener () {
   document.querySelectorAll('.popup__close-button').forEach(button => {
@@ -138,6 +139,13 @@ const updUserInfo = ({name, about, avatar, _id}) => {
 Promise.all([api.getUserInfo(), api.getCards()])
 .then(([userInfo, cards]) => {
   updUserInfo(userInfo);
-  addCard(cards)
+  const cardList = new Section({
+    items: cards,
+    renderer: (item) => {
+      const cardElement = new Card(item, '#card-Template').generate();
+      cardList.addItem(cardElement);
+    }
+  }, cardsContainer);
+  cardList.renderItems();
 })
 .catch((error) => console.error(error))
