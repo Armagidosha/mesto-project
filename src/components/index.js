@@ -20,9 +20,9 @@ import {
   avatarForm
 } from './constants';
 import {closePopup, openPopup} from './modal';
-import {addCard, createCard, showLikeCount, Card} from './card';
+import {addCard, Card} from './card';
 import {formConst} from './utils.js';
-import {enableValidation, resetValidation, disableButton} from './validate';
+import FormValidator from './validate';
 import {api} from './api';
 
 function сloseButtonsListener () {
@@ -41,12 +41,12 @@ const renderLoading = (isLoading, form) => {
   }
 }
 
-
-
 // Открытие попапа редактирования профиля
 profileEditButton.addEventListener('click', () => {
   openPopup(popupEdit);
-  resetValidation(popupEdit, formConst);
+  const editProfileValidate = new FormValidator(formConst, popupEdit)
+  editProfileValidate.enableValidation()
+  editProfileValidate.resetValidation()
   inputName.value = authorName.textContent; // Убрать после полного завершения проекта 
   inputDescription.value = authorDescription.textContent; // Убрать после полного завершения проекта
 });
@@ -54,17 +54,21 @@ profileEditButton.addEventListener('click', () => {
 // Открытие попапа добавления карточек
 cardAddButton.addEventListener('click', () => {
   openPopup(popupAdd)
-  resetValidation(popupAdd, formConst);
+  const cardAddValidate = new FormValidator(formConst, popupAdd)
+  cardAddValidate.enableValidation()
+  cardAddValidate.resetValidation()
+  cardAddValidate.disableButton(addSubmitButton)
   submitAddForm.reset();
-  disableButton(addSubmitButton);
 });
 
 // Открытие попапа обновления аватара 
 avatar.addEventListener('click', () => {
   openPopup(popupAvatar)
-  resetValidation(popupAvatar, formConst);
+  const avatarValidate = new FormValidator(formConst, popupAvatar)
+  avatarValidate.enableValidation()
+  avatarValidate.resetValidation()
+  avatarValidate.disableButton(avatarButton)
   avatarForm.reset();
-  disableButton(avatarButton);
 });
 
 // Функция сабмита аватара
@@ -111,8 +115,7 @@ const submitCards = (evt) => {
   .finally(() => renderLoading(false, popupAdd))
 }
 submitAddForm.addEventListener('submit', submitCards)
-// 
-enableValidation(formConst);
+
 сloseButtonsListener();
 // 
 // A P I

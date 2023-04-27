@@ -1,8 +1,7 @@
 export default class FormValidator {
-  constructor({formConst}, formElement) {
+  constructor(formConst, formElement) {
     this._formConst = formConst;
     this._formElement = formElement;
-    
   }
 
   _showError(inputElement, errorMessage) {
@@ -36,7 +35,7 @@ export default class FormValidator {
     return inputList.some(inputElement => {
       return !inputElement.validity.valid
     })
-  }
+  };
   
   _toggleButtonState (inputList, buttonElement) {
     if (this._hasInvalidInput(inputList)) {
@@ -46,12 +45,12 @@ export default class FormValidator {
       buttonElement.classList.remove(this._formConst.submitButtonDisabled);
       buttonElement.disabled = false;
     }
-  }
+  };
   
   enableValidation() {
     const inputList = Array.from(this._formElement.querySelectorAll(`.${this._formConst.input}`));
     const buttonElement = this._formElement.querySelector(`.${this._formConst.submitButton}`);
-    this.toggleButtonState(inputList, buttonElement);
+    this._toggleButtonState(inputList, buttonElement);
     inputList.forEach((inputElement) => {
       inputElement.addEventListener('input', () => {
         this._isValid(inputElement);
@@ -63,13 +62,12 @@ export default class FormValidator {
   resetValidation() {
     const inputList = Array.from(this._formElement.querySelectorAll(`.${this._formConst.input}`));
     inputList.forEach((inputElement) => {
-      _hideError(inputElement);
+    this._hideError(inputElement);
     });
-  
   };
   
   disableButton(button) {
     button.disabled = true
     button.classList.add('popup__save-button_disabled')
-  }
+  };
 }
