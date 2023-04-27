@@ -20,7 +20,7 @@ import {
   avatarForm
 } from './constants';
 import {closePopup, openPopup} from './modal';
-import {addCard, createCard, showLikeCount} from './card';
+import {addCard, createCard, showLikeCount, Card} from './card';
 import {formConst} from './utils.js';
 import {enableValidation, resetValidation, disableButton} from './validate';
 import {api} from './api';
@@ -41,15 +41,7 @@ const renderLoading = (isLoading, form) => {
   }
 }
 
-export const updLikes = (id, userId, cardElement) => {
-  const likeButton = cardElement.querySelector('.element__like-button');
-  const like = likeButton.classList.contains('element__like-button_active');
-  api.updateLikes(!like, id)
-  .then((card) => {
-    showLikeCount(card.likes, cardElement, userId);
-  })
-  .catch((error) => console.error(error))
-}
+
 
 // Открытие попапа редактирования профиля
 profileEditButton.addEventListener('click', () => {
@@ -112,7 +104,7 @@ const submitCards = (evt) => {
     url: imageInput.value
   })
   .then((card) => {
-    cardsContainer.prepend(createCard(card))
+    cardsContainer.prepend(new Card(card, '#card-Template').generate());
     closePopup(popupAdd);
   })
   .catch((error) => console.error(`Не удалось отправить карточку: ${error}`))
