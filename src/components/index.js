@@ -19,19 +19,12 @@ import {
   inputAvatarUrl,
   avatarForm
 } from './constants';
-import {closePopup, openPopup} from './modal';
-import {addCard, Card} from './card';
+import Popup from './popup';
+import {Card} from './card';
 import {formConst} from './utils.js';
 import FormValidator from './validate';
 import {api} from './api';
 import Section from './section';
-
-function сloseButtonsListener () {
-  document.querySelectorAll('.popup__close-button').forEach(button => {
-    const buttonsPopup = button.closest('.popup');
-    button.addEventListener('click', () => closePopup(buttonsPopup));
-  });  
-  }
 
 const renderLoading = (isLoading, form) => {
   const button = form.querySelector('.popup__save-button')
@@ -116,8 +109,6 @@ const submitCards = (evt) => {
   .finally(() => renderLoading(false, popupAdd))
 }
 submitAddForm.addEventListener('submit', submitCards)
-
-сloseButtonsListener();
 // 
 // A P I
 //

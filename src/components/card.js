@@ -1,5 +1,5 @@
 import {cardsContainer, cardTemplate, imagePreview, imageFigCaption, popupImagePreview} from './constants';
-import {openPopup} from './modal';
+// import {openPopup} from './modal';
 import {getId} from './index.js';
 import {api} from './api';
 
