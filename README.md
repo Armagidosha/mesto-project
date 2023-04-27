@@ -12,3 +12,4 @@
 > [Репозиторий github](https://github.com/Armagidosha/mesto-project)
 #### Github pages 
 > [Страничка github pages](https://armagidosha.github.io/mesto-project/)
+asdasdasd
