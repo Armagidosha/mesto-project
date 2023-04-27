@@ -19,7 +19,7 @@ import {
   inputAvatarUrl,
   avatarForm
 } from './constants';
-import Popup from './popup';
+import Popup from './Popup';
 import {Card} from './card';
 import {formConst} from './utils.js';
 import FormValidator from './validate';

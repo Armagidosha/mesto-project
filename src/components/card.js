@@ -2,6 +2,7 @@ import {cardsContainer, cardTemplate, imagePreview, imageFigCaption, popupImageP
 // import {openPopup} from './modal';
 import {getId} from './index.js';
 import {api} from './api';
+import PopupWithImage from './popupWithImage';
 
 export const addCard = (cards) => {
   cards.forEach((element) => {
@@ -35,6 +36,11 @@ export class Card {
         this._element.remove()
       })
       .catch((error) => console.error(error))
+    });
+    const popupWithImage = new PopupWithImage(popupImagePreview, {name: this._name, link: this._link});
+    popupWithImage.setEventListeners();
+    this._element.querySelector('.element__image').addEventListener('click', () => {
+      popupWithImage.openPopup();
     });
   }
 
