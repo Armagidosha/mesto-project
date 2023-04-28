@@ -13,6 +13,4 @@ export default class PopupWithImage extends Popup {
   		imagePreview.alt = this._data.name;
   		imageFigCaption.textContent = this._data.name;
 	}
-
-	
 }

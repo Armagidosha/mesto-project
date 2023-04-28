@@ -13,12 +13,13 @@ import {
   popupAvatar,
   avatarButton,
 } from './constants';
-import {Card} from './card';
-import {formConst} from './utils.js';
+import Card from './card';
+import {formConst, config} from './utils.js';
 import FormValidator from './validate';
-import {api} from './api';
+import Api from './api';
 import Section from './section';
 import PopupWithForm from './PopupWithForm';
+import UserInfo from './UserInfo';
 
 const renderLoading = (isLoading, form) => {
   const button = form.querySelector('.popup__save-button')
@@ -29,6 +30,12 @@ const renderLoading = (isLoading, form) => {
   }
 }
 
+export const api = new Api(config);
+const userInfo = new UserInfo({
+  name: authorName,
+  description: authorDescription,
+  avatar: authorAvatar
+});
 // Открытие попапа редактирования профиля
 const editProfileValidate = new FormValidator(formConst, popupEdit)
 profileEditButton.addEventListener('click', () => {
@@ -36,8 +43,8 @@ profileEditButton.addEventListener('click', () => {
   profileInstance.setEventListeners();
   editProfileValidate.enableValidation()
   editProfileValidate.resetValidation()
-  inputName.value = authorName.textContent; // Убрать после полного завершения проекта 
-  inputDescription.value = authorDescription.textContent; // Убрать после полного завершения проекта
+  inputName.value = userInfo.getUserInfo().name; // Убрать после полного завершения проекта 
+  inputDescription.value = userInfo.getUserInfo().description; // Убрать после полного завершения проекта
 });
 
 // Открытие попапа добавления карточек
@@ -64,7 +71,7 @@ const avatarInstance = new PopupWithForm(popupAvatar, (inputs) => {
   renderLoading(true, popupAvatar);
   api.updateAvatar(inputs.avatar)
   .then((res) => {
-    updUserInfo(res);
+    userInfo.setUserInfo(res);
     avatarInstance.closePopup();
   })
   .catch((error) => console.error(`Не удалось обновить аватар: ${error}`))
@@ -72,16 +79,14 @@ const avatarInstance = new PopupWithForm(popupAvatar, (inputs) => {
 })
 
 const profileInstance = new PopupWithForm(popupEdit, (inputs) => {
-  console.log(inputs)
   renderLoading(true, popupEdit)
   api.patchUserInfo({
     name: inputs.user, 
     about: inputs.description
   })
   .then((res) => {
-    updUserInfo(res);
+    userInfo.setUserInfo(res);
     profileInstance.closePopup();
-    console.log(res)
   })
   .catch((error) => console.error(`Не удалось изменить данные профиля: ${error}`))
   .finally(() => renderLoading(false, popupEdit))
@@ -101,31 +106,13 @@ const cardInstance = new PopupWithForm(popupAdd, (inputs) => {
   .finally(() => renderLoading(false, popupAdd))
 })
 
-// 
-// A P I
-//
-
-export const getId = () => {
-  return id;
-}
-
-let id = 0
-
-// Обновляем информацию на клиентской части
-const updUserInfo = ({name, about, avatar, _id}) => {
-  authorName.textContent = name;
-  authorDescription.textContent = about
-  authorAvatar.style.backgroundImage = `url(${avatar})`;
-  id = _id
-}
-
 Promise.all([api.getUserInfo(), api.getCards()])
-.then(([userInfo, cards]) => {
-  updUserInfo(userInfo);
+.then(([userData, cards]) => {
+  userInfo.setUserInfo(userData);
   const cardList = new Section({
     items: cards,
     renderer: (item) => {
-      const cardElement = new Card(item, '#card-Template').generate();
+      const cardElement = new Card(item, '#card-Template', userData._id).generate();
       cardList.addItem(cardElement);
     }
   }, cardsContainer);

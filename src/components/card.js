@@ -1,23 +1,16 @@
-import {cardsContainer, popupImagePreview} from './constants';
-import {getId} from './index.js';
-import {api} from './api';
+import {popupImagePreview} from './constants';
+import {api} from './index.js';
 import PopupWithImage from './popupWithImage';
 
-export const addCard = (cards) => {
-  cards.forEach((element) => {
-    cardsContainer.append(new Card(element, '#card-Template').generate())
-  })
-};
-
-export class Card {
-  constructor(card, selector) {
+export default class Card {
+  constructor(card, selector, userId) {
     this._selector = selector;
     this._name = card.name;
     this._link = card.link;
     this._likes = card.likes;
     this._id = card._id;
     this._ownerId = card.owner._id;
-    this._userId = getId();
+    this._userId = userId;
   }
 
   _getElement() {
@@ -46,7 +39,7 @@ export class Card {
   generate() {
     this._element = this._getElement();
     this._setEventListeners();
-
+      
     const image = this._element.querySelector('.element__image');
     const heading = this._element.querySelector('.element__heading');
     const removeButton = this._element.querySelector('.element__delete-button');
