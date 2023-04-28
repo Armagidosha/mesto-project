@@ -2,29 +2,23 @@ import './../pages/index.css'
 import {
   authorName, authorDescription, 
   popupEdit, profileEditButton, 
-  submitEditForm, 
   inputName, 
   inputDescription, 
   popupAdd, 
   cardAddButton,
-  headingInput,
-  imageInput, 
-  submitAddForm,
   addSubmitButton,
   authorAvatar,
   cardsContainer,
   avatar,
   popupAvatar,
   avatarButton,
-  inputAvatarUrl,
-  avatarForm
 } from './constants';
-import Popup from './Popup';
 import {Card} from './card';
 import {formConst} from './utils.js';
 import FormValidator from './validate';
 import {api} from './api';
 import Section from './section';
+import PopupWithForm from './PopupWithForm';
 
 const renderLoading = (isLoading, form) => {
   const button = form.querySelector('.popup__save-button')
@@ -36,9 +30,10 @@ const renderLoading = (isLoading, form) => {
 }
 
 // Открытие попапа редактирования профиля
+const editProfileValidate = new FormValidator(formConst, popupEdit)
 profileEditButton.addEventListener('click', () => {
-  openPopup(popupEdit);
-  const editProfileValidate = new FormValidator(formConst, popupEdit)
+  profileInstance.openPopup();
+  profileInstance.setEventListeners();
   editProfileValidate.enableValidation()
   editProfileValidate.resetValidation()
   inputName.value = authorName.textContent; // Убрать после полного завершения проекта 
@@ -46,69 +41,66 @@ profileEditButton.addEventListener('click', () => {
 });
 
 // Открытие попапа добавления карточек
+const cardAddValidate = new FormValidator(formConst, popupAdd)
 cardAddButton.addEventListener('click', () => {
-  openPopup(popupAdd)
-  const cardAddValidate = new FormValidator(formConst, popupAdd)
+  cardInstance.setEventListeners()
+  cardInstance.openPopup();
   cardAddValidate.enableValidation()
   cardAddValidate.resetValidation()
   cardAddValidate.disableButton(addSubmitButton)
-  submitAddForm.reset();
 });
 
 // Открытие попапа обновления аватара 
+const avatarValidate = new FormValidator(formConst, popupAvatar)
 avatar.addEventListener('click', () => {
-  openPopup(popupAvatar)
-  const avatarValidate = new FormValidator(formConst, popupAvatar)
+  avatarInstance.setEventListeners()
+  avatarInstance.openPopup()
   avatarValidate.enableValidation()
   avatarValidate.resetValidation()
   avatarValidate.disableButton(avatarButton)
-  avatarForm.reset();
 });
 
-// Функция сабмита аватара
-function submitAvatar (evt) {
-  evt.preventDefault();
+const avatarInstance = new PopupWithForm(popupAvatar, (inputs) => {
   renderLoading(true, popupAvatar);
-  api.updateAvatar(inputAvatarUrl.value)
+  api.updateAvatar(inputs.avatar)
   .then((res) => {
     updUserInfo(res);
-    closePopup(popupAvatar);
+    avatarInstance.closePopup();
   })
   .catch((error) => console.error(`Не удалось обновить аватар: ${error}`))
   .finally(() => renderLoading(false, popupAvatar))
-}
-avatarForm.addEventListener('submit', submitAvatar)
+})
 
-// Функция сабмита профиля
-function submitProfile (evt) {
-  evt.preventDefault();
+const profileInstance = new PopupWithForm(popupEdit, (inputs) => {
+  console.log(inputs)
   renderLoading(true, popupEdit)
-  api.patchUserInfo({name: inputName.value, about: inputDescription.value})
+  api.patchUserInfo({
+    name: inputs.user, 
+    about: inputs.description
+  })
   .then((res) => {
     updUserInfo(res);
-    closePopup(popupEdit);
+    profileInstance.closePopup();
+    console.log(res)
   })
   .catch((error) => console.error(`Не удалось изменить данные профиля: ${error}`))
   .finally(() => renderLoading(false, popupEdit))
-}
-submitEditForm.addEventListener('submit', submitProfile);
+})
 
-// функция сабмита карточек
-const submitCards = (evt) => {
-  evt.preventDefault();
+const cardInstance = new PopupWithForm(popupAdd, (inputs) => {
   renderLoading(true, popupAdd);
   api.postCards({
-    name: headingInput.value,
-    url: imageInput.value
+    name: inputs.user,
+    url: inputs.description 
   })
   .then((card) => {
     cardsContainer.prepend(new Card(card, '#card-Template').generate());
-    closePopup(popupAdd);
+    cardInstance.closePopup()
   })
   .catch((error) => console.error(`Не удалось отправить карточку: ${error}`))
   .finally(() => renderLoading(false, popupAdd))
-}
-submitAddForm.addEventListener('submit', submitCards)
+})
+
 // 
 // A P I
 //
