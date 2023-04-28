@@ -1,4 +1,4 @@
-import {popupImagePreview} from './constants';
+import { popupImagePreview } from '../utils/constants.js';
 import {api} from './index.js';
 import PopupWithImage from './popupWithImage';
 

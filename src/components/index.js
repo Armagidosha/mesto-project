@@ -12,9 +12,9 @@ import {
   avatar,
   popupAvatar,
   avatarButton,
-} from './constants';
+} from '../utils/constants.js';
 import Card from './card';
-import {formConst, config} from './utils.js';
+import { formConst, config } from '../utils/utils';
 import FormValidator from './validate';
 import Api from './api';
 import Section from './section';
