@@ -2,6 +2,7 @@ export default class FormValidator {
   constructor(formConst, formElement) {
     this._formConst = formConst;
     this._formElement = formElement;
+    this._button = formElement.querySelector('.popup__save-button');
   }
 
   _showError(inputElement, errorMessage) {
@@ -66,8 +67,8 @@ export default class FormValidator {
     });
   };
   
-  disableButton(button) {
-    button.disabled = true
-    button.classList.add('popup__save-button_disabled')
+  disableButton() {
+    this._button.disabled = true
+    this._button.classList.add('popup__save-button_disabled')
   };
 }
