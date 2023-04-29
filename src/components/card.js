@@ -1,9 +1,5 @@
-import { popupImagePreview } from '../utils/constants.js';
-import {api} from './index.js';
-import PopupWithImage from './popupWithImage';
-
 export default class Card {
-  constructor(card, selector, userId) {
+  constructor(card, selector, userId, handleCardClick, handleCardDelete, handleCardLike) {
     this._selector = selector;
     this._name = card.name;
     this._link = card.link;
@@ -11,6 +7,10 @@ export default class Card {
     this._id = card._id;
     this._ownerId = card.owner._id;
     this._userId = userId;
+    this._isLiked = this._likes.some((item) => item._id === this._userId);
+    this._handleCardClick = handleCardClick;
+    this._handleCardDelete = handleCardDelete;
+    this._handleCardLike = handleCardLike;
   }
 
   _getElement() {
@@ -20,19 +20,13 @@ export default class Card {
 
   _setEventListeners() {
     this._element.querySelector('.element__like-button').addEventListener('click', () => {
-      this._updLikes();
+      this._handleCardLike();
     });
     this._element.querySelector('.element__delete-button').addEventListener('click', () => {
-      api.deleteCard(this._id)
-      .then (() => {
-        this._element.remove()
-      })
-      .catch((error) => console.error(error))
+      this._handleCardDelete();
     });
-    const popupWithImage = new PopupWithImage(popupImagePreview, {name: this._name, link: this._link});
-    popupWithImage.setEventListeners();
     this._element.querySelector('.element__image').addEventListener('click', () => {
-      popupWithImage.openPopup();
+      this._handleCardClick();
     });
   }
 
@@ -40,38 +34,23 @@ export default class Card {
     this._element = this._getElement();
     this._setEventListeners();
       
-    const image = this._element.querySelector('.element__image');
-    const heading = this._element.querySelector('.element__heading');
-    const removeButton = this._element.querySelector('.element__delete-button');
-    heading.textContent = this._name;
-    image.src = this._link;
-    image.alt = this._name;
-    this._showLikeCount();
+    this._image = this._element.querySelector('.element__image');
+    this._heading = this._element.querySelector('.element__heading');
+    this._removeButton = this._element.querySelector('.element__delete-button');
+    this._likeButton = this._element.querySelector('.element__like-button');
+    this._likeCounter = this._element.querySelector('.element__like-count');
+
+    this._heading.textContent = this._name;
+    this._image.src = this._link;
+    this._image.alt = this._name;
+    this._likeCounter.textContent = this._likes.length;
+    if (this._isLiked) {
+      this._likeButton.classList.add('element__like-button_active');
+    }
     if (this._ownerId !== this._userId) {
-      removeButton.remove()
+      this._removeButton.remove();
     }
 
     return this._element
   }
-
-  _updLikes() {
-    const likeButton = this._element.querySelector('.element__like-button');
-    const like = likeButton.classList.contains('element__like-button_active');
-    api.updateLikes(!like, this._id)
-    .then((card) => {
-      this._likes = card.likes;
-      this._showLikeCount();
-    })
-    .catch((error) => console.error(error))
-  }
-
-  _showLikeCount() {
-    const likeButton = this._element.querySelector('.element__like-button');
-    const likeCounter = this._element.querySelector('.element__like-count');
-  
-    likeCounter.textContent = `${this._likes.length}`;
-    const isLike = this._likes.some((item) => item._id === this._userId);
-    likeButton.classList.toggle('element__like-button_active', isLike);
-  }
-
 }
