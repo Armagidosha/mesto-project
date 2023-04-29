@@ -38,10 +38,9 @@ const userInfo = new UserInfo({
 });
 // Открытие попапа редактирования профиля
 const editProfileValidate = new FormValidator(formConst, popupEdit)
+editProfileValidate.enableValidation()
 profileEditButton.addEventListener('click', () => {
   profileInstance.openPopup();
-  profileInstance.setEventListeners();
-  editProfileValidate.enableValidation()
   editProfileValidate.resetValidation()
   inputName.value = userInfo.getUserInfo().name; // Убрать после полного завершения проекта 
   inputDescription.value = userInfo.getUserInfo().description; // Убрать после полного завершения проекта
@@ -49,20 +48,20 @@ profileEditButton.addEventListener('click', () => {
 
 // Открытие попапа добавления карточек
 const cardAddValidate = new FormValidator(formConst, popupAdd)
+cardAddValidate.enableValidation()
 cardAddButton.addEventListener('click', () => {
-  cardInstance.setEventListeners()
   cardInstance.openPopup();
-  cardAddValidate.enableValidation()
   cardAddValidate.resetValidation()
   cardAddValidate.disableButton(addSubmitButton)
 });
 
+
+
 // Открытие попапа обновления аватара 
 const avatarValidate = new FormValidator(formConst, popupAvatar)
+avatarValidate.enableValidation()
 avatar.addEventListener('click', () => {
-  avatarInstance.setEventListeners()
   avatarInstance.openPopup()
-  avatarValidate.enableValidation()
   avatarValidate.resetValidation()
   avatarValidate.disableButton(avatarButton)
 });
@@ -106,6 +105,9 @@ const cardInstance = new PopupWithForm(popupAdd, (inputs) => {
   .finally(() => renderLoading(false, popupAdd))
 })
 
+avatarInstance.setEventListeners()
+profileInstance.setEventListeners();
+cardInstance.setEventListeners()
 Promise.all([api.getUserInfo(), api.getCards()])
 .then(([userData, cards]) => {
   userInfo.setUserInfo(userData);
