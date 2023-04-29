@@ -56,7 +56,7 @@ cardAddValidate.enableValidation()
 cardAddButton.addEventListener('click', () => {
   cardInstance.openPopup();
   cardAddValidate.resetValidation()
-  cardAddValidate.disableButton(addSubmitButton)
+  cardAddValidate.disableButton()
 });
 
 
@@ -67,7 +67,7 @@ avatarValidate.enableValidation()
 avatar.addEventListener('click', () => {
   avatarInstance.openPopup()
   avatarValidate.resetValidation()
-  avatarValidate.disableButton(avatarButton)
+  avatarValidate.disableButton()
 });
 
 const avatarInstance = new PopupWithForm(popupAvatar, (inputs) => {
