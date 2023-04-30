@@ -6,15 +6,11 @@ import {
   inputDescription, 
   popupAdd, 
   cardAddButton,
-  addSubmitButton,
   authorAvatar,
   cardsContainer,
   avatar,
   popupAvatar,
-  avatarButton,
-  popupImagePreview,
-  imagePreview,
-  imageFigCaption
+  popupImagePreview
 } from '../utils/constants.js';
 import Card from './card';
 import { formConst, config } from '../utils/utils';
@@ -34,41 +30,20 @@ const renderLoading = (isLoading, form) => {
   }
 }
 
+// const createCard = ()
+
+// Создаём экземпляры классов Api
 export const api = new Api(config);
 const userInfo = new UserInfo({
   name: authorName,
   description: authorDescription,
   avatar: authorAvatar
 });
-// Открытие попапа редактирования профиля
+
 const editProfileValidate = new FormValidator(formConst, popupEdit)
-editProfileValidate.enableValidation()
-profileEditButton.addEventListener('click', () => {
-  profileInstance.openPopup();
-  editProfileValidate.resetValidation()
-  inputName.value = userInfo.getUserInfo().name; // Убрать после полного завершения проекта 
-  inputDescription.value = userInfo.getUserInfo().description; // Убрать после полного завершения проекта
-});
-
-// Открытие попапа добавления карточек
 const cardAddValidate = new FormValidator(formConst, popupAdd)
-cardAddValidate.enableValidation()
-cardAddButton.addEventListener('click', () => {
-  cardInstance.openPopup();
-  cardAddValidate.resetValidation()
-  cardAddValidate.disableButton()
-});
-
-
-
-// Открытие попапа обновления аватара 
 const avatarValidate = new FormValidator(formConst, popupAvatar)
-avatarValidate.enableValidation()
-avatar.addEventListener('click', () => {
-  avatarInstance.openPopup()
-  avatarValidate.resetValidation()
-  avatarValidate.disableButton()
-});
+const popupWithImage = new PopupWithImage(popupImagePreview);
 
 const avatarInstance = new PopupWithForm(popupAvatar, (inputs) => {
   renderLoading(true, popupAvatar);
@@ -109,32 +84,37 @@ const cardInstance = new PopupWithForm(popupAdd, (inputs) => {
   .finally(() => renderLoading(false, popupAdd))
 })
 
+// Вешаем обработчики
+editProfileValidate.enableValidation()
+profileEditButton.addEventListener('click', () => {
+  profileInstance.openPopup();
+  editProfileValidate.resetValidation()
+  inputName.value = userInfo.getUserInfo().name; // Убрать после полного завершения проекта 
+  inputDescription.value = userInfo.getUserInfo().description; // Убрать после полного завершения проекта
+});
+
+cardAddValidate.enableValidation()
+cardAddButton.addEventListener('click', () => {
+  cardInstance.openPopup();
+  cardAddValidate.resetValidation()
+  cardAddValidate.disableButton()
+});
+
+avatarValidate.enableValidation()
+avatar.addEventListener('click', () => {
+  avatarInstance.openPopup()
+  avatarValidate.resetValidation()
+  avatarValidate.disableButton()
+});
+
 avatarInstance.setEventListeners()
 profileInstance.setEventListeners();
 cardInstance.setEventListeners();
-
+popupWithImage.setEventListeners();
+// --
 const userId = {
   id: 0
 };
-
-Promise.all([api.getUserInfo(), api.getCards()])
-.then(([userData, cards]) => {
-  userId.id = userData._id;
-  userInfo.setUserInfo(userData);
-  const cardList = new Section({
-    items: cards,
-    renderer: (item) => {
-      const cardElement = new Card(item, '#card-Template', userId.id, handleCardClick, handleCardDelete, handleCardLike).generate();
-      cardList.addItem(cardElement);
-    }
-  }, cardsContainer);
-  cardList.renderItems();
-})
-.catch((error) => console.error(error))
-
-
-const popupWithImage = new PopupWithImage(popupImagePreview);
-popupWithImage.setEventListeners();
 
 function handleCardClick() {
   popupWithImage.openPopup({name: this._name, link: this._link})
@@ -157,4 +137,17 @@ function handleCardLike() {
      })
      .catch((error) => console.error(error))
 }
-
+Promise.all([api.getUserInfo(), api.getCards()])
+.then(([userData, cards]) => {
+  userId.id = userData._id;
+  userInfo.setUserInfo(userData);
+  const cardList = new Section({
+    items: cards,
+    renderer: (item) => {
+      const cardElement = new Card(item, '#card-Template', userId.id, handleCardClick, handleCardDelete, handleCardLike).generate();
+      cardList.addItem(cardElement);
+    }
+  }, cardsContainer);
+  cardList.renderItems();
+})
+.catch((error) => console.error(error))
