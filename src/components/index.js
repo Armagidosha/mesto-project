@@ -77,7 +77,7 @@ const cardInstance = new PopupWithForm(popupAdd, (inputs) => {
     url: inputs.description 
   })
   .then((card) => {
-    cardsContainer.prepend(new Card(card, '#card-Template', userId.id, handleCardClick, handleCardDelete, handleCardLike).generate());
+    cardList.prependItem(createCard(card));
     cardInstance.closePopup()
   })
   .catch((error) => console.error(`Не удалось отправить карточку: ${error}`))
@@ -116,6 +116,10 @@ const userId = {
   id: 0
 };
 
+function createCard(card) {
+  return new Card(card, '#card-Template', userId.id, handleCardClick, handleCardDelete, handleCardLike).generate();
+}
+
 function handleCardClick() {
   popupWithImage.openPopup({name: this._name, link: this._link})
 }
@@ -137,15 +141,17 @@ function handleCardLike() {
      })
      .catch((error) => console.error(error))
 }
+
+let cardList;
+
 Promise.all([api.getUserInfo(), api.getCards()])
 .then(([userData, cards]) => {
   userId.id = userData._id;
   userInfo.setUserInfo(userData);
-  const cardList = new Section({
+  cardList = new Section({
     items: cards,
     renderer: (item) => {
-      const cardElement = new Card(item, '#card-Template', userId.id, handleCardClick, handleCardDelete, handleCardLike).generate();
-      cardList.addItem(cardElement);
+      cardList.appendItem(createCard(item));
     }
   }, cardsContainer);
   cardList.renderItems();
