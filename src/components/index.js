@@ -30,8 +30,6 @@ const renderLoading = (isLoading, form) => {
   }
 }
 
-// const createCard = ()
-
 // Создаём экземпляры классов Api
 export const api = new Api(config);
 const userInfo = new UserInfo({
