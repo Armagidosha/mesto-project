@@ -67,6 +67,6 @@ export default class FormValidator {
   
   disableButton() {
     this._button.disabled = true
-    this._button.classList.add('popup__save-button_disabled')
+    this._button.classList.add(this._formConst.submitButtonDisabled)
   };
 }
