@@ -118,24 +118,22 @@ function createCard(card) {
   return new Card(card, '#card-Template', userId.id, handleCardClick, handleCardDelete, handleCardLike).generate();
 }
 
-function handleCardClick() {
-  popupWithImage.openPopup({name: this._name, link: this._link})
+function handleCardClick(name, link) {
+  popupWithImage.openPopup({name: name, link: link})
 }
 
-function handleCardDelete() {
-  api.deleteCard(this._id)
+function handleCardDelete(id, element) {
+  api.deleteCard(id)
        .then (() => {
-         this._element.remove()
+        element.remove();
        })
        .catch((error) => console.error(error))
 }
 
-function handleCardLike() {
-  api.updateLikes(!this._isLiked, this._id)
+function handleCardLike(isLiked, id) {
+  api.updateLikes(isLiked, id)
      .then((card) => {
-       this._likeCounter.textContent = card.likes.length;
-       this._likeButton.classList.toggle('element__like-button_active');
-       this._isLiked = !this._isLiked;
+       this.changeLike(card);
      })
      .catch((error) => console.error(error))
 }

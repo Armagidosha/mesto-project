@@ -20,14 +20,20 @@ export default class Card {
 
   _setEventListeners() {
     this._element.querySelector('.element__like-button').addEventListener('click', () => {
-      this._handleCardLike();
+      this._handleCardLike(!this._isLiked, this._id);
     });
     this._element.querySelector('.element__delete-button').addEventListener('click', () => {
-      this._handleCardDelete();
+      this._handleCardDelete(this._id, this._element);
     });
     this._element.querySelector('.element__image').addEventListener('click', () => {
-      this._handleCardClick();
+      this._handleCardClick(this._name, this._link);
     });
+  }
+
+  changeLike(card) {
+    this._likeCounter.textContent = card.likes.length;
+    this._likeButton.classList.toggle('element__like-button_active');
+    this._isLiked = !this._isLiked;
   }
 
   generate() {
