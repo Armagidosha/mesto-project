@@ -1,4 +1,3 @@
-export const cardTemplate = document.querySelector('#card-Template').content;
 export const authorName = document.querySelector('.profile__author');
 export const authorAvatar = document.querySelector('.profile__avatar');
 export const authorDescription = document.querySelector('.profile__description');

@@ -2,35 +2,24 @@ import './../pages/index.css'
 import {
   authorName, authorDescription, 
   popupEdit, profileEditButton, 
-  submitEditForm, 
   inputName, 
   inputDescription, 
   popupAdd, 
   cardAddButton,
-  headingInput,
-  imageInput, 
-  submitAddForm,
-  addSubmitButton,
   authorAvatar,
   cardsContainer,
   avatar,
   popupAvatar,
-  avatarButton,
-  inputAvatarUrl,
-  avatarForm
-} from './constants';
-import {closePopup, openPopup} from './modal';
-import {addCard, createCard, showLikeCount} from './card';
-import {formConst} from './utils.js';
-import {enableValidation, resetValidation, disableButton} from './validate';
-import {getUserInfo, getCards, postCards, patchUserInfo, updateAvatar, updateLikes} from './api';
-
-function сloseButtonsListener () {
-  document.querySelectorAll('.popup__close-button').forEach(button => {
-    const buttonsPopup = button.closest('.popup');
-    button.addEventListener('click', () => closePopup(buttonsPopup));
-  });  
-  }
+  popupImagePreview
+} from '../utils/constants.js';
+import Card from './card';
+import { formConst, config } from '../utils/utils';
+import FormValidator from './validate';
+import Api from './api';
+import Section from './section';
+import PopupWithForm from './PopupWithForm';
+import UserInfo from './UserInfo';
+import PopupWithImage from './popupWithImage';
 
 const renderLoading = (isLoading, form) => {
   const button = form.querySelector('.popup__save-button')
@@ -41,108 +30,126 @@ const renderLoading = (isLoading, form) => {
   }
 }
 
-export const updLikes = (id, userId, cardElement) => {
-  const likeButton = cardElement.querySelector('.element__like-button');
-  const like = likeButton.classList.contains('element__like-button_active');
-  updateLikes(!like, id)
-  .then((card) => {
-    showLikeCount(card.likes, cardElement, userId);
-  })
-  .catch((error) => console.error(error))
-}
-
-// Открытие попапа редактирования профиля
-profileEditButton.addEventListener('click', () => {
-  openPopup(popupEdit);
-  resetValidation(popupEdit, formConst);
-  inputName.value = authorName.textContent; // Убрать после полного завершения проекта 
-  inputDescription.value = authorDescription.textContent; // Убрать после полного завершения проекта
+// Создаём экземпляры классов Api
+export const api = new Api(config);
+const userInfo = new UserInfo({
+  name: authorName,
+  description: authorDescription,
+  avatar: authorAvatar
 });
 
-// Открытие попапа добавления карточек
-cardAddButton.addEventListener('click', () => {
-  openPopup(popupAdd)
-  resetValidation(popupAdd, formConst);
-  submitAddForm.reset();
-  disableButton(addSubmitButton);
-});
+const editProfileValidate = new FormValidator(formConst, popupEdit)
+const cardAddValidate = new FormValidator(formConst, popupAdd)
+const avatarValidate = new FormValidator(formConst, popupAvatar)
+const popupWithImage = new PopupWithImage(popupImagePreview);
 
-// Открытие попапа обновления аватара 
-avatar.addEventListener('click', () => {
-  openPopup(popupAvatar)
-  resetValidation(popupAvatar, formConst);
-  avatarForm.reset();
-  disableButton(avatarButton);
-});
-
-// Функция сабмита аватара
-function submitAvatar (evt) {
-  evt.preventDefault();
+const avatarInstance = new PopupWithForm(popupAvatar, (inputs) => {
   renderLoading(true, popupAvatar);
-  updateAvatar(inputAvatarUrl.value)
+  api.updateAvatar(inputs.avatar)
   .then((res) => {
-    updUserInfo(res);
-    closePopup(popupAvatar);
+    userInfo.setUserInfo(res);
+    avatarInstance.closePopup();
   })
   .catch((error) => console.error(`Не удалось обновить аватар: ${error}`))
   .finally(() => renderLoading(false, popupAvatar))
-}
-avatarForm.addEventListener('submit', submitAvatar)
+})
 
-// Функция сабмита профиля
-function submitProfile (evt) {
-  evt.preventDefault();
+const profileInstance = new PopupWithForm(popupEdit, (inputs) => {
   renderLoading(true, popupEdit)
-  patchUserInfo({name: inputName.value, about: inputDescription.value})
+  api.patchUserInfo({
+    name: inputs.user, 
+    about: inputs.description
+  })
   .then((res) => {
-    updUserInfo(res);
-    closePopup(popupEdit);
+    userInfo.setUserInfo(res);
+    profileInstance.closePopup();
   })
   .catch((error) => console.error(`Не удалось изменить данные профиля: ${error}`))
   .finally(() => renderLoading(false, popupEdit))
-}
-submitEditForm.addEventListener('submit', submitProfile);
+})
 
-// функция сабмита карточек
-const submitCards = (evt) => {
-  evt.preventDefault();
+const cardInstance = new PopupWithForm(popupAdd, (inputs) => {
   renderLoading(true, popupAdd);
-  postCards({
-    name: headingInput.value,
-    url: imageInput.value
+  api.postCards({
+    name: inputs.user,
+    url: inputs.description 
   })
   .then((card) => {
-    cardsContainer.prepend(createCard(card))
-    closePopup(popupAdd);
+    cardList.prependItem(createCard(card));
+    cardInstance.closePopup()
   })
   .catch((error) => console.error(`Не удалось отправить карточку: ${error}`))
   .finally(() => renderLoading(false, popupAdd))
+})
+
+// Вешаем обработчики
+editProfileValidate.enableValidation()
+profileEditButton.addEventListener('click', () => {
+  profileInstance.openPopup();
+  editProfileValidate.resetValidation()
+  inputName.value = userInfo.getUserInfo().name; // Убрать после полного завершения проекта 
+  inputDescription.value = userInfo.getUserInfo().description; // Убрать после полного завершения проекта
+});
+
+cardAddValidate.enableValidation()
+cardAddButton.addEventListener('click', () => {
+  cardInstance.openPopup();
+  cardAddValidate.resetValidation()
+  cardAddValidate.disableButton()
+});
+
+avatarValidate.enableValidation()
+avatar.addEventListener('click', () => {
+  avatarInstance.openPopup()
+  avatarValidate.resetValidation()
+  avatarValidate.disableButton()
+});
+
+avatarInstance.setEventListeners()
+profileInstance.setEventListeners();
+cardInstance.setEventListeners();
+popupWithImage.setEventListeners();
+// --
+const userId = {
+  id: 0
+};
+
+function createCard(card) {
+  return new Card(card, '#card-Template', userId.id, handleCardClick, handleCardDelete, handleCardLike).generate();
 }
-submitAddForm.addEventListener('submit', submitCards)
-// 
-enableValidation(formConst);
-сloseButtonsListener();
-// 
-// A P I
-//
 
-export const getId = () => {
-  return id;
+function handleCardClick(name, link) {
+  popupWithImage.openPopup({name: name, link: link})
 }
 
-let id = 0
-
-// Обновляем информацию на клиентской части
-const updUserInfo = ({name, about, avatar, _id}) => {
-  authorName.textContent = name;
-  authorDescription.textContent = about
-  authorAvatar.style.backgroundImage = `url(${avatar})`;
-  id = _id
+function handleCardDelete(id, element) {
+  api.deleteCard(id)
+       .then (() => {
+        element.remove();
+       })
+       .catch((error) => console.error(error))
 }
 
-Promise.all([getUserInfo(), getCards()])
-.then(([userInfo, cards]) => {
-  updUserInfo(userInfo);
-  addCard(cards)
+function handleCardLike(isLiked, id) {
+  api.updateLikes(isLiked, id)
+     .then((card) => {
+       this.changeLike(card);
+     })
+     .catch((error) => console.error(error))
+}
+
+let cardList;
+
+Promise.all([api.getUserInfo(), api.getCards()])
+.then(([userData, cards]) => {
+  userId.id = userData._id;
+  userInfo.setUserInfo(userData);
+  cardList = new Section({
+    items: cards,
+    renderer: (item) => {
+      cardList.appendItem(createCard(item));
+    }
+  }, cardsContainer);
+  cardList.renderItems();
 })
 .catch((error) => console.error(error))

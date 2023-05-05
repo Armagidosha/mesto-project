@@ -12,4 +12,8 @@
 > [Репозиторий github](https://github.com/Armagidosha/mesto-project)
 #### Github pages 
 > [Страничка github pages](https://armagidosha.github.io/mesto-project/)
-asdasdasd
+
+
+
+#### Contributors
+> [Репозиторий github](https://github.com/igoKas) почта: grkasapov@gmail.com
